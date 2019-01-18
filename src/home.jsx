@@ -1,11 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Records from './records';
+import Menus from './menus';
 
 class Home extends React.Component {
     render() {
         return (
-            <Records/>
+            <div >
+                <Menus/>
+                <Records/>
+            </div>
+                
             )
     }
 }
