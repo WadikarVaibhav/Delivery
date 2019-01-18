@@ -43,21 +43,29 @@ export default class Records extends React.Component {
 
     render() {
         return (
-            <div>
-                <List>
-                <ListItem>
-                    <Checkbox  tabIndex={-1} disableRipple />
-                    <ListItemAvatar>
-                        <Avatar src={`vaibhav.jpg`} />
-                    </ListItemAvatar>
-                    <ListItemText primary={'Vaibhav'} />
-                    <ListItemText primary={'80%'} />
-                    <LinearProgress variant="determinate"  />
-                </ListItem>
-            </List>
-            <LinearProgress variant="determinate"  value={90}/>
+            <div className="container">
+                <List className="list">
+                    <LinearProgress  variant="determinate"  value={90}/>
+                    <ListItem>
+                        <Checkbox  tabIndex={-1} disableRipple />
+                        <ListItemAvatar>
+                            <Avatar src={`vaibhav.jpg`} />
+                        </ListItemAvatar>
+                        <ListItemText primary={'Vaibhav'} />
+                        <ListItemText primary={'80%'} />
+                    </ListItem>
+                    <LinearProgress  variant="determinate"  value={90}/>
+                    <ListItem>
+                        <Checkbox  tabIndex={-1} disableRipple />
+                        <ListItemAvatar>
+                            <Avatar src={`vaibhav.jpg`} />
+                        </ListItemAvatar>
+                        <ListItemText primary={'Vaibhav'} />
+                        <ListItemText primary={'80%'} />
+                    </ListItem>
+                    
+                </List>
             </div>
-            
         )
     }
 }
