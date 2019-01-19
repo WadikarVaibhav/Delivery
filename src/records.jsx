@@ -14,7 +14,9 @@ export default class Records extends React.Component {
 
     constructor() {
         super();
+        this.read = this.read.bind(this);
         this.state = {
+            records: [],
             people: [
                 {
                     id: 1,
@@ -103,46 +105,70 @@ export default class Records extends React.Component {
     }
 
     componentWillMount() {
-        this.getCsvData();
-    }
-
-    fetchCsv() {
-        return fetch('/data/data.csv').then(function (response) {
-            let reader = response.body.getReader();
-            let decoder = new TextDecoder('utf-8');
-
-            return reader.read().then(function (result) {
-                return decoder.decode(result.value);
-            });
+        Papa.parse('../data/data.csv', {
+          header: true,
+          download: true,
+          skipEmptyLines: true,
+          complete: this.read
         });
+      }
+
+    read(records) {
+        this.setState({
+            records: records.data
+        }); 
+        this.sortHighToLow();
     }
 
-    getData(result) {
-        this.setState({data: result.data});
+    sortHighToLow() {
+        var records = this.state.records;
+        records.sort((record1, record2) => {
+            return record2.load - record1.load;
+        })
+        this.setState({
+            records: records
+        })
     }
 
-    async getCsvData() {
-        let csvData = await this.fetchCsv();
+    sortLowToHigh() {
+        var records = this.state.records;
+        records.sort((record1, record2) => {
+            return record1.load - record2.load;
+        })
+        this.setState({
+            records: records
+        })
+    }
 
-        Papa.parse(csvData, {
-            complete: this.getData
-        });
+    getLoadStatus(option, load) {
+
+        var threshold = 75;
+        var totalCap = 100;
+
+        if (option === 'overload') {
+            return load - threshold > 0 ? load - threshold : 0;
+        } else if (option === 'space') {
+            return threshold - load > 0 ? (totalCap)-(threshold-load) : totalCap;
+
+        }
+        return 0;
     }
 
     render() {
+        console.log(this.state.records)
         return (
             <div className="container">
                 <Paper style={{maxHeight: 500, overflow: 'auto'}} className="list">
                     <List>
-                        {this.state.people.map(person => {
+                        {this.state.records.map(person => {
                             return (
                                 <ListItem key={person.id}>
                                     <Checkbox disableRipple />
-                                    <ListItemAvatar><Avatar src={person.picture}/></ListItemAvatar>
+                                    <ListItemAvatar><Avatar src={'../images/'+person.name+'.jpg'}/></ListItemAvatar>
                                     <ListItemText className="list-item" primary={person.name} />
-                                    <ListItemText className="list-item-percentage" disableTypography primary={<Typography style={{ color: '#1C86EE', fontSize: 16, fontWeight: 'bold' }}>{parseInt(person.loadPercentage)+'%'}</Typography>}/>
-                                    <Line className="progress-bar" percent="10" trailWidth="4" strokeWidth="4" strokeColor="#E1E1E1" trailColor="#58E8C2"/>
-                                    <Line className="progress-bar" percent="34" trailWidth = "4" strokeWidth="4" strokeColor="#F13564" trailColor="#FFFFFF"/>
+                                    <ListItemText className="list-item-percentage" disableTypography primary={<Typography style={{ color: '#1C86EE', fontSize: 16, fontWeight: 'bold' }}>{parseInt(person.load)+'%'}</Typography>}/>
+                                    <Line className="progress-bar" percent={this.getLoadStatus('space', person.load)} trailWidth="4" strokeWidth="4" strokeColor= "#E1E1E1" trailColor="#58E8C2"/>
+                                    <Line className="progress-bar" percent={this.getLoadStatus('overload', person.load)} trailWidth = "4" strokeWidth="4" strokeColor="#F13564" trailColor="#FFFFFF"/>
                                 </ListItem>
                             );                        
                         })}
