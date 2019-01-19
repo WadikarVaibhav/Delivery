@@ -6,7 +6,7 @@ import Sort from './sort';
 export default class Menus extends React.Component {
     render() {
         return (
-            <div className = "container">
+            <div className = "menus">
                 <Filter/>
                 <Sort/>
             </div>        

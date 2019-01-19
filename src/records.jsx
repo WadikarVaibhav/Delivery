@@ -8,6 +8,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Paper from '@material-ui/core/Paper';
 import { Line } from 'rc-progress';
 import Typography from '@material-ui/core/Typography';
+import Papa from 'papaparse';
 
 export default class Records extends React.Component {
 
@@ -101,6 +102,33 @@ export default class Records extends React.Component {
         }
     }
 
+    componentWillMount() {
+        this.getCsvData();
+    }
+
+    fetchCsv() {
+        return fetch('/data/data.csv').then(function (response) {
+            let reader = response.body.getReader();
+            let decoder = new TextDecoder('utf-8');
+
+            return reader.read().then(function (result) {
+                return decoder.decode(result.value);
+            });
+        });
+    }
+
+    getData(result) {
+        this.setState({data: result.data});
+    }
+
+    async getCsvData() {
+        let csvData = await this.fetchCsv();
+
+        Papa.parse(csvData, {
+            complete: this.getData
+        });
+    }
+
     render() {
         return (
             <div className="container">
@@ -113,8 +141,8 @@ export default class Records extends React.Component {
                                     <ListItemAvatar><Avatar src={person.picture}/></ListItemAvatar>
                                     <ListItemText className="list-item" primary={person.name} />
                                     <ListItemText className="list-item-percentage" disableTypography primary={<Typography style={{ color: '#1C86EE', fontSize: 16, fontWeight: 'bold' }}>{parseInt(person.loadPercentage)+'%'}</Typography>}/>
-                                    <Line className="progress-bar" percent="10" trailWidth="4" strokeWidth="4" strokeColor="gray" trailColor="green"/>
-                                    <Line className="progress-bar" percent="34" trailWidth = "4" strokeWidth="4" strokeColor="red" trailColor="white"/>
+                                    <Line className="progress-bar" percent="10" trailWidth="4" strokeWidth="4" strokeColor="#E1E1E1" trailColor="#58E8C2"/>
+                                    <Line className="progress-bar" percent="34" trailWidth = "4" strokeWidth="4" strokeColor="#F13564" trailColor="#FFFFFF"/>
                                 </ListItem>
                             );                        
                         })}

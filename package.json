@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.9.0",
-    "@material-ui/styles": "^3.0.0-alpha.8",
+    "papaparse": "^4.6.3",
     "rc-progress": "^2.3.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",

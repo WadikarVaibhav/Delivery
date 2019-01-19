@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 
 const options = [
-    { value: 'Volume', label: 'Volume' },
+    { value: 'Volume', label: 'Volume'},
     { value: 'Time', label: 'Time' },
     { value: 'Distance', label: 'Distance' }
   ];
