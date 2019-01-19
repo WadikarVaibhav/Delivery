@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Records from './records';
-import Menus from './menus';
+import Records from '../views/records';
+import Menus from '../views/menus';
 import Papa from 'papaparse';
-import Constants from '../constants/constants';
+import Constants from '../../constants/constants';
 
 class Home extends React.Component {
 
@@ -55,7 +55,7 @@ class Home extends React.Component {
     render() {
         return (
             <div className="main">
-                <Menus sortOptions = {{lowToHigh: this.sortLowToHigh, highToLow: this.sortHighToLow}} />
+                <Menus sort={{lowToHigh: this.sortLowToHigh, highToLow: this.sortHighToLow}}/>
                 <Records records={this.state.records}/>
             </div>                
         )

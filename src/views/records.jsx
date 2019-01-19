@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import { Line } from 'rc-progress';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import Constants from '../constants/constants';
+import Constants from '../../constants/constants';
 
 export default class Records extends React.Component {
 
