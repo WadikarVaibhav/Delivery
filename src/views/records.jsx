@@ -22,6 +22,10 @@ export default class Records extends React.Component {
         return 0;
     }
 
+    onChange(event, isChecked) {
+        this.props.updateRecords(event.target.value, isChecked);
+     }
+
     render() {
         return (
             <div className="container">
@@ -31,12 +35,12 @@ export default class Records extends React.Component {
                             return (
                                 <div key={person.id}>
                                     <ListItem >
-                                        <Checkbox disableRipple />
-                                        <ListItemAvatar><Avatar src={'../images/'+person.name+'.jpg'}/></ListItemAvatar>
+                                        <Checkbox checked={person.merge} onChange={this.onChange.bind(this)} value={person.id} />
+                                        <ListItemAvatar><Avatar src={Constants.IMAGE_PATH + person.name + Constants.JPG}/></ListItemAvatar>
                                         <ListItemText className="list-item"  disableTypography primary={<Typography style={{ fontSize: 15, fontFamily:'sans-serif' }}>{person.name}</Typography>} />
-                                        <ListItemText className="list-item-percentage" disableTypography primary={<Typography style={{ color: '#1C86EE', fontSize: 16, fontWeight: 'bold' }}>{parseInt(person.load)+'%'}</Typography>}/>
-                                        <Line className="progress-bar" percent={this.getLoadStatus(Constants.SPACE, person.load)} trailWidth="4" strokeWidth="4" strokeColor= "#E1E1E1" trailColor="#58E8C2"/>
-                                        <Line className="progress-bar" percent={this.getLoadStatus(Constants.OVERLOAD, person.load)} trailWidth = "4" strokeWidth="4" strokeColor="#F13564" trailColor="#FFFFFF"/>
+                                        <ListItemText className="list-item-percentage" disableTypography primary={<Typography style={{ color: '#1C86EE', fontSize: 16, fontWeight: 'bold' }}>{person.load+Constants.PERCENT}</Typography>}/>
+                                        <Line className="progress-bar" percent={this.getLoadStatus(Constants.SPACE, person.load)} trailWidth={Constants.PROGRESS_BAR_WIDTH} strokeWidth={Constants.PROGRESS_BAR_WIDTH} strokeColor={Constants.PRIMARY_STROKE_COLOR_LEFT_BAR}  trailColor={Constants.SECONDARY_STROKE_COLOR_LEFT_BAR}/>
+                                        <Line className="progress-bar" percent={this.getLoadStatus(Constants.OVERLOAD, person.load)} trailWidth = {Constants.PROGRESS_BAR_WIDTH} strokeWidth={Constants.PROGRESS_BAR_WIDTH} strokeColor={Constants.PRIMARY_STROKE_COLOR_RIGHT_BAR} trailColor={Constants.SECONDARY_STROKE_COLOR_RIGHT_BAR}/>
                                     </ListItem>
                                     <Divider />
                                 </div>
@@ -44,7 +48,7 @@ export default class Records extends React.Component {
                         })}
                     </List>
                 </Paper>                
-                <button className="merge" >Merge</button>
+                <button className="merge" onClick={this.props.merge} >Merge</button>
             </div>
         )
     }
