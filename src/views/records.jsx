@@ -10,8 +10,29 @@ import { Line } from 'rc-progress';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Constants from '../../constants/constants';
+import * as Actions from "../actions/action";
+import Store from '../stores/store';
 
 export default class Records extends React.Component {
+
+    constructor() {
+        super();
+        this.state = {
+            records: Store.getRecords(),
+            selectedLoad: 0,
+            selectedCount: 0
+        }
+        this.onSelect = this.onSelect.bind(this);
+        this.merge = this.merge.bind(this);
+    }
+
+    componentDidMount() {
+        Store.on("change", this.showResult.bind(this));
+    }
+
+    componentWillUnmount() {
+        Store.removeListener("change", this.showResult.bind(this));
+    }
 
     getLoadStatus(option, load) {
         if (option === Constants.OVERLOAD) {
@@ -22,20 +43,48 @@ export default class Records extends React.Component {
         return 0;
     }
 
-    onChange(event, isChecked) {
-        this.props.updateRecords(event.target.value, isChecked);
-     }
+    onSelect(event, isChecked) {
+        let selectedLoad = this.state.selectedLoad;
+        const selectedRecords = this.state.records;
+        let selectedCount = this.state.selectedCount;
+        let index = this.state.records.findIndex(record => record.id === parseInt(event.target.value));
+        if (isChecked) {
+            selectedLoad += this.state.records[index].load;
+            selectedRecords[index].merge = true;
+            selectedCount++;
+        } else {
+            selectedRecords[index].merge = false;
+            selectedCount--;
+        }
+        this.setState({
+            records: selectedRecords,
+            selectedLoad: selectedLoad,
+            selectedCount: selectedCount
+        })
+    }
+
+    showResult() {
+        this.setState({
+            records: Store.getRecords(),
+            selectedLoad: 0,
+            selectedCount: 0
+        })    
+    }
+
+    merge() {
+        Actions.merge(this.state.records, this.state.selectedLoad, this.state.selectedCount);
+    }
 
     render() {
         return (
             <div className="container">
                 <Paper style={{maxHeight: 500, overflow: 'auto'}} >
                     <List>
-                        {this.props.records.map(person => {
+                        {this.state.records.map(person => {
                             return (
                                 <div key={person.id}>
                                     <ListItem >
-                                        <Checkbox checked={person.merge} onChange={this.onChange.bind(this)} value={person.id} />
+                                        <Checkbox checked={person.merge} onChange={this.onSelect} value={person.id+''} />
                                         <ListItemAvatar><Avatar src={Constants.IMAGE_PATH + person.name + Constants.JPG}/></ListItemAvatar>
                                         <ListItemText className="list-item"  disableTypography primary={<Typography style={{ fontSize: 15, fontFamily:'sans-serif' }}>{person.name}</Typography>} />
                                         <ListItemText className="list-item-percentage" disableTypography primary={<Typography style={{ color: '#1C86EE', fontSize: 16, fontWeight: 'bold' }}>{person.load+Constants.PERCENT}</Typography>}/>
@@ -48,7 +97,7 @@ export default class Records extends React.Component {
                         })}
                     </List>
                 </Paper>                
-                <button className="merge" onClick={this.props.merge} >Merge</button>
+                <button className="merge" onClick={this.merge} >Merge</button>
             </div>
         )
     }

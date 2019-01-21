@@ -2,23 +2,33 @@ import React from 'react';
 import Select from 'react-select';
 import Options from '../../constants/options.jsx';
 import Constants from '../../constants/constants.jsx';
+import * as Actions from "../actions/action";
+import Store from '../stores/store';
 
 export default class Menus extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            filter: Options.FILTER_OPTIONS[0],
-            sort: Options.SORT_OPTIONS[0]
+            filter: Store.getFilter(),
+            sort: Store.getSort()
         }
         this.handleSorting = this.handleSorting.bind(this);
     }
 
+    componentWillMount() {
+        if (this.state.sort == Options.SORT_OPTIONS[0]) {
+            Actions.sort(Constants.HIGH_TO_LOW);
+        } else {
+            Actions.sort(Constants.LOW_TO_HIGH);
+        }
+    }
+
     handleSorting (option) {
         if (option.value == Constants.HIGH_TO_LOW) {
-            this.props.sort.highToLow();
+            Actions.sort(Constants.HIGH_TO_LOW);
         } else if (option.value == Constants.LOW_TO_HIGH) {
-            this.props.sort.lowToHigh();
+            Actions.sort(Constants.LOW_TO_HIGH);
         }
         this.setState({
             sort: option
