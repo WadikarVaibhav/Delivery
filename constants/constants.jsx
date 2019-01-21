@@ -16,6 +16,9 @@
     SECONDARY_STROKE_COLOR_LEFT_BAR: '#58E8C2',
     PRIMARY_STROKE_COLOR_RIGHT_BAR: '#F13564',
     SECONDARY_STROKE_COLOR_RIGHT_BAR: '#FFFFFF',
+    CHANGE: 'change',
+    MERGE: 'merge',
+    SORT: 'sort',
   }
 
   export default constants;

@@ -1,6 +1,5 @@
 import Dispatcher from "../dispatcher/dispatcher";
 import {EventEmitter} from "events";
-import Papa from 'papaparse';
 import Constants from '../../constants/constants';
 import Options from '../../constants/options.jsx';
 
@@ -8,35 +7,20 @@ class Store extends EventEmitter {
 
     constructor() {
         super();
-        this.records = [
-            {id: 1, name: 'Vaibhav', load: 89, merge: false}, 
-            {id: 2, name: 'Ana', load: 29, merge: false}, 
-            {id: 3, name: 'Dana', load: 69, merge: false}, 
-            {id: 4, name: 'Andrew', load: 39, merge: false}
-        ];
+        this.records = this.getInitialRecords();
         this.sort = Options.SORT_OPTIONS[0];
         this.filter = Options.FILTER_OPTIONS[0];
     }
 
-    componentWillMount() {
-        this.sortHighToLow();
-        this.parse(Constants.FILE_PATH);
-    }
-
-    parse(file) {
-        Papa.parse(file, {
-            header: true,
-            download: true,
-            skipEmptyLines: true,
-            complete: this.read
-        });
-    }
-
-    read(records) {
-        records.data.forEach(function(record) { record.merge = false; });
-        this.records = records.data
-        this.sortHighToLow();
-        this.emit('change');
+    getInitialRecords() {
+        var records = [];
+        records[0] = {id: 1, name: 'Vaibhav', load: 89, merge: false};
+        records[1] = {id: 2, name: 'Ana', load: 29, merge: false};
+        records[2] = {id: 3, name: 'Dana', load: 69, merge: false};
+        records[3] = {id: 4, name: 'Andrew', load: 39, merge: false};
+        records[4] = {id: 5, name: 'John', load: 100, merge: false};
+        records[5] = {id: 6, name: 'Ricky', load: 85, merge: false};
+        return records;
     }
 
     handleSort(order) {
@@ -64,13 +48,13 @@ class Store extends EventEmitter {
 
     handleAction(action) {
         switch(action.type) {
-            case 'sort':
+            case Constants.SORT:
                 this.handleSort(action.order);
-                this.emit('change');
+                this.emit(Constants.CHANGE);
                 break;
-            case 'merge':
+            case Constants.MERGE:
                 this.handleMerge(action.records, action.selectedLoad, action.selectedCount);
-                this.emit('change');
+                this.emit(Constants.CHANGE);
                 break;
             default:
                 break;

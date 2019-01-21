@@ -27,11 +27,11 @@ export default class Records extends React.Component {
     }
 
     componentDidMount() {
-        Store.on("change", this.showResult.bind(this));
+        Store.on(Constants.CHANGE, this.showResult.bind(this));
     }
 
     componentWillUnmount() {
-        Store.removeListener("change", this.showResult.bind(this));
+        Store.removeListener(Constants.CHANGE, this.showResult.bind(this));
     }
 
     getLoadStatus(option, load) {
